@@ -1,5 +1,5 @@
 
-#RAG dependencies?
+# RAG dependencies?
 from operator import itemgetter
 
 from langchain_community.vectorstores import FAISS
@@ -16,7 +16,13 @@ from dotenv import load_dotenv
 load_dotenv()
 
 vectorstore = FAISS.from_texts(
-    ["harrison worked at Safeway"], embedding=OpenAIEmbeddings()
+    [
+        "harrison worked at Safeway",
+        "harrison is blond",
+        "barrison lives in colorado",
+        "harrison is a gay clown"
+    ],
+    embedding=OpenAIEmbeddings(),
 )
 retriever = vectorstore.as_retriever()
 model = ChatOpenAI()
@@ -30,7 +36,6 @@ def make_basic_context():
     """
     prompt = ChatPromptTemplate.from_template(template)
 
-
     chain = (
         {"context": retriever, "question": RunnablePassthrough()}
         | prompt
@@ -38,8 +43,8 @@ def make_basic_context():
         | StrOutputParser()
     )
 
-
     return chain
+
 
 def make_language_context():
 
@@ -62,14 +67,16 @@ def make_language_context():
         | model
         | StrOutputParser()
     )
-    
+
     return chain
+
 
 def make_history_chain():
 
-    _template = """
+    condense_question_template = """
 
     Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question. Answer in English.
+    You're allowed to make stuff up if you don't have the context to answer the question. 
     Chat History:
     {chat_history}
     Follow Up Input: {question}
@@ -77,35 +84,38 @@ def make_history_chain():
 
     """
 
-    CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(_template)
+    CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(
+        condense_question_template)
 
-    template = """Answer the question based only on the following context:
+    answer_template = """Answer the question given the following context or make something up if the context doesn't provide the information:
     {context}
 
     Question: {question}
     """
-    ANSWER_PROMPT = ChatPromptTemplate.from_template(template)
+    ANSWER_PROMPT = ChatPromptTemplate.from_template(answer_template)
+    DEFAULT_DOCUMENT_PROMPT = PromptTemplate.from_template(
+        template="{page_content}")
 
-    DEFAULT_DOCUMENT_PROMPT = PromptTemplate.from_template(template="{page_content}")
-
-
-    def _combine_documents(
+    def combine_documents(
         docs, document_prompt=DEFAULT_DOCUMENT_PROMPT, document_separator="\n\n"
     ):
         doc_strings = [format_document(doc, document_prompt) for doc in docs]
         return document_separator.join(doc_strings)
 
-    _inputs = RunnableParallel(
+    inputs = RunnableParallel(
         standalone_question=RunnablePassthrough.assign(
             chat_history=lambda x: get_buffer_string(x["chat_history"])
         )
         | CONDENSE_QUESTION_PROMPT
-        | ChatOpenAI(temperature=0)
+        | ChatOpenAI(temperature=0.7)
         | StrOutputParser(),
     )
-    _context = {
-        "context": itemgetter("standalone_question") | retriever | _combine_documents,
+
+    context = {
+        "context": itemgetter("standalone_question") | retriever | combine_documents,
         "question": lambda x: x["standalone_question"],
     }
-    conversational_qa_chain = _inputs | _context | ANSWER_PROMPT | ChatOpenAI()
+
+    conversational_qa_chain = inputs | context | ANSWER_PROMPT | ChatOpenAI()
+
     return conversational_qa_chain
