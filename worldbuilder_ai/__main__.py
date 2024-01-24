@@ -1,4 +1,5 @@
 from langchain_core.messages import HumanMessage, AIMessage
+import datetime
 
 # env variables, only for api key right now
 from dotenv import load_dotenv
@@ -11,31 +12,31 @@ from models import make_history_chain
 
 ###### history stuff: #####
 
+def main():
+    log = []
+    history = []
+    chain = make_history_chain()
+    now = datetime.datetime.now().strftime("%Y-%m-%d-%H-%M-%S")
 
-log = []
-history_chain = make_history_chain()
+    while (user_input := input("User > ")) != "exit":
+        log.append("User> " + user_input + "\n")
+        response = chain.invoke(
+            {
+                "question": user_input,
+                "chat_history": history,
+                "language": "english",
+            }
+        )
+        log.append("Agent> " + response.content + "\n")
+        print(response.content)
 
-log.append(
-    history_chain.invoke(
-        {
-            "question": "where did harrison work?",
-            "chat_history": [],
-            "language": "english",
-        }
-    )
-)
+        human_message = HumanMessage(content=user_input)
+        ai_message = response
 
-log.append(
-    history_chain.invoke(
-        {
-            "question": "where did he work?",
-            "chat_history": [
-                HumanMessage(content="Who wrote this notebook?"),
-                AIMessage(content="Harrison"),
-            ],
-            "language": "english",
-        }
-    )
-)
+        history.append((human_message, ai_message))
 
-print(log)
+    with open(f"logs/{now}.txt", "w") as f:
+        f.writelines(log)
+
+if __name__ == "__main__":
+    main()
