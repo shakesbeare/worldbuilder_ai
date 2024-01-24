@@ -4,7 +4,7 @@ from langchain_core.messages import HumanMessage, AIMessage
 from dotenv import load_dotenv
 load_dotenv()
 
-from models import basic_chain, language_chain, history_chain
+from models import make_history_chain
 
 # print(basic_context.invoke("where did harrison work?"))
 # print(language_context.invoke({"question": "what is kensho?", "language": "english"}))
@@ -13,12 +13,14 @@ from models import basic_chain, language_chain, history_chain
 
 
 log = []
+history_chain = make_history_chain()
 
 log.append(
     history_chain.invoke(
         {
             "question": "where did harrison work?",
             "chat_history": [],
+            "language": "english",
         }
     )
 )
@@ -31,6 +33,7 @@ log.append(
                 HumanMessage(content="Who wrote this notebook?"),
                 AIMessage(content="Harrison"),
             ],
+            "language": "english",
         }
     )
 )

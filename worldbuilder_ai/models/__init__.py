@@ -16,7 +16,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 vectorstore = FAISS.from_texts(
-    ["harrison worked at kensho"], embedding=OpenAIEmbeddings()
+    ["harrison worked at Safeway"], embedding=OpenAIEmbeddings()
 )
 retriever = vectorstore.as_retriever()
 model = ChatOpenAI()
@@ -65,11 +65,11 @@ def make_language_context():
     
     return chain
 
-def make_history_context():
+def make_history_chain():
 
     _template = """
 
-    Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question, in its original language.
+    Given the following conversation and a follow up question, rephrase the follow up question to be a standalone question. Answer in English.
     Chat History:
     {chat_history}
     Follow Up Input: {question}
@@ -109,9 +109,3 @@ def make_history_context():
     }
     conversational_qa_chain = _inputs | _context | ANSWER_PROMPT | ChatOpenAI()
     return conversational_qa_chain
-
-
-
-basic_chain = make_basic_context()
-language_chain = make_language_context()
-history_chain = make_history_context()
