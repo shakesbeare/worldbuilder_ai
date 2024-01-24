@@ -1,5 +1,5 @@
 [tool.poetry]
-name = "worldbulder-ai"
+name = "worldbuilder-ai"
 version = "0.1.0"
 description = ""
 authors = ["Berint Moffett <berint.moffett@gmail.com>"]
