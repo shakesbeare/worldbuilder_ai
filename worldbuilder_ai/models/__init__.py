@@ -87,7 +87,8 @@ def make_history_chain():
     CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(
         condense_question_template)
 
-    answer_template = """Answer the question given the following context or make something up if the context doesn't provide the information:
+    answer_template = """
+    You are a creative genius who has been tasked with creating a legendary world. Given your context provided, come up with answers for the following question:
     {context}
 
     Question: {question}
