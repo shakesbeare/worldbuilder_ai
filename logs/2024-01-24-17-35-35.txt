@@ -1,0 +1,4 @@
+User> who is harrison
+Agent> Harrison is a blond individual who works at Safeway, a grocery store. He is originally from Colorado and identifies as a gay clown.
+User> Adria is a elf
+Agent> Adria is a vibrant and imaginative character who is a close friend of Harrison. She is a talented artist who specializes in creating colorful and whimsical paintings. Adria was born and raised in California but moved to Colorado to pursue her passion for nature and the outdoors. She is a strong supporter of LGBTQ+ rights and often participates in local pride events. Adria and Harrison often collaborate on creative projects, combining his love for clowning and her artistic skills to bring joy and laughter to their community.

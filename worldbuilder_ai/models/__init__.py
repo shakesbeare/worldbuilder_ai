@@ -11,6 +11,9 @@ from langchain.schema import format_document
 from langchain_core.messages import get_buffer_string
 from langchain_core.runnables import RunnableParallel
 from langchain.prompts import PromptTemplate
+from langchain_community.vectorstores import Qdrant
+from langchain_community.document_loaders import TextLoader
+from langchain.text_splitter import CharacterTextSplitter
 
 from dotenv import load_dotenv
 load_dotenv()
@@ -88,7 +91,7 @@ def make_history_chain():
         condense_question_template)
 
     answer_template = """
-    You are a creative genius who has been tasked with creating a legendary world. Given your context provided, come up with answers for the following question:
+    You are a creative genius who has been tasked with creating a fantasy world. Given your context provided, come up with answers for the following question:
     {context}
 
     Question: {question}
@@ -112,11 +115,22 @@ def make_history_chain():
         | StrOutputParser(),
     )
 
+    loader = TextLoader("./texts.txt")
+    documents = loader.load()
+    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
+    docs = text_splitter.split_documents(documents)
+
+    qdrant = Qdrant.from_documents(
+        docs, embedding=OpenAIEmbeddings(),
+        path="local_qdrant",
+        collection_name="texts",
+    )
+
     context = {
-        "context": itemgetter("standalone_question") | retriever | combine_documents,
+        "context": itemgetter("standalone_question") | qdrant.as_retriever() | combine_documents,
         "question": lambda x: x["standalone_question"],
     }
 
     conversational_qa_chain = inputs | context | ANSWER_PROMPT | ChatOpenAI()
 
-    return conversational_qa_chain
+    return (qdrant, conversational_qa_chain)
