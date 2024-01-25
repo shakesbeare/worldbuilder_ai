@@ -96,6 +96,7 @@ def make_history_chain():
     1) No places or people from the real world should appear in your response
     2) You should use language relevant to the game of Dungeons and Dragons.
     3) Your response should be focused around the given question.
+    4) Focus on generating plot hooks rather than complete storylines
     {context}
 
     Question: {question}
