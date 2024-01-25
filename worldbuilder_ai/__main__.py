@@ -1,10 +1,10 @@
 from langchain_core.messages import HumanMessage, AIMessage
 from models import make_history_chain
 import datetime
-
-# env variables, only for api key right now
+from rich.console import Console
 from dotenv import load_dotenv
 load_dotenv()
+console = Console()
 
 def main():
     log = []
@@ -22,7 +22,7 @@ def main():
             }
         )
         log.append("Agent> " + response.content + "\n")
-        print("AI >\n" + response.content)
+        console.print("AI >\n" + response.content, style="bold yellow")
 
         human_message = HumanMessage(content=user_input)
         ai_message = response
