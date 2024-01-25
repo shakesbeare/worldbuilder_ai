@@ -90,8 +90,12 @@ def make_history_chain():
     CONDENSE_QUESTION_PROMPT = PromptTemplate.from_template(
         condense_question_template)
 
-    answer_template = """
-    You are a creative genius who has been tasked with creating a fantasy world. Given your context provided, come up with answers for the following question:
+    answer_template = """\
+    You are a worldbuilding expert. Given the context, you are tasked with answering prompts to create a fun world
+    for the game of dnd. There are the following restrictions on your responses:
+    1) No places or people from the real world should appear in your response
+    2) You should use language relevant to the game of Dungeons and Dragons.
+    3) Your response should be focused around the given question.
     {context}
 
     Question: {question}
