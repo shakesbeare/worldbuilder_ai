@@ -74,7 +74,7 @@ def make_language_context():
     return chain
 
 
-def make_history_chain():
+def make_history_chain(details, world_name="default"):
 
     condense_question_template = """
 
@@ -120,15 +120,10 @@ def make_history_chain():
         | StrOutputParser(),
     )
 
-    loader = TextLoader("./texts.txt")
-    documents = loader.load()
-    text_splitter = CharacterTextSplitter(chunk_size=1000, chunk_overlap=0)
-    docs = text_splitter.split_documents(documents)
-
-    qdrant = Qdrant.from_documents(
-        docs, embedding=OpenAIEmbeddings(),
+    qdrant = Qdrant.from_texts(
+        details, embedding=OpenAIEmbeddings(),
         path="local_qdrant",
-        collection_name="texts",
+        collection_name=world_name,
     )
 
     context = {
