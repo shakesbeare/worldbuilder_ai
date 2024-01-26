@@ -1,0 +1,2 @@
+User> what does Harrison do
+Agent> Harrison's occupation is a Safeway employee or worker.
