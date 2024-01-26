@@ -1,0 +1,6 @@
+User> What race is Adria?
+Agent> Adria's ethnicity is not explicitly mentioned in the given context. However, based on her name, it is possible that Adria could have a Mediterranean or Italian heritage.
+User> In terms of the different races in the world, which race is Adria?
+Agent> Answer: Adria is an elf.
+User> Is it possible that she is another elf? 
+Agent> Yes, Adria could belong to a different elf race.

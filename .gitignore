@@ -1,2 +1,8 @@
 env/
 .env
+/__pycache__/
+__pycache__/
+.mypy_cache/
+local_qdrant
+qdrant_storage/
+worlds.json

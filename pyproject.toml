@@ -1,16 +1,19 @@
 [tool.poetry]
-name = "worldbulder-ai"
+name = "worldbuilder-ai"
 version = "0.1.0"
 description = ""
 authors = ["Berint Moffett <berint.moffett@gmail.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "^3.11"
 python-dotenv = "^1.0.1"
 langchain = "^0.1.2"
 langchain-community = "^0.0.14"
 openai = "^1.9.0"
+langchain-openai = "^0.0.3"
+faiss-cpu = "^1.7.4"
+qdrant-client = "^1.7.1"
 
 
 [build-system]

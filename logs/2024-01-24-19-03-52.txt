@@ -1,0 +1,2 @@
+User> Where is Adria from?
+Agent> Adria is originally from the Shadowfell, a plane of darkness and despair.
